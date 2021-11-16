@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wordpres
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    external-dns.alpha.kubernetes.io/hostname: wordpress.elastic.desarrollo.unlp.edu.ar
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/issuer: "letsencrypt-staging"
+spec:
+  tls:
+  - hosts:
+    - wordpress.k8s.desarrollo.unlp.edu.ar
+    secretName: miniapi-staging-certificate #viene de certificate.waml
+  rules:
+  - host: wordpress.k8s.desarrollo.unlp.edu.ar 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: wordpress
+            port:
+              number: 80
